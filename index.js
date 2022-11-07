@@ -23,8 +23,15 @@ async function run() {
     const serviceCollection = client
       .db("cloudKitchenUser")
       .collection("services");
-    //   services api
+    //   services api for 3 data
     app.get("/services", async (req, res) => {
+      const query = {};
+      const cursor = serviceCollection.find(query);
+      const services = await cursor.limit(3).toArray();
+      res.send(services);
+    });
+    //   service api for all data
+    app.get("/servicesall", async (req, res) => {
       const query = {};
       const cursor = serviceCollection.find(query);
       const services = await cursor.toArray();
