@@ -24,7 +24,9 @@ async function run() {
     const serviceCollection = client
       .db("cloudKitchenUser")
       .collection("services");
-    const orderCollection = client.db("cloudKitchenUser").collection("orders");
+    const reviewCollection = client
+      .db("cloudKitchenUser")
+      .collection("reviews");
     //   services api for 3 data
     app.get("/services", async (req, res) => {
       const query = {};
@@ -32,9 +34,6 @@ async function run() {
       const services = await cursor.limit(3).toArray();
       res.send(services);
     });
-    // cloudKitchenUser
-    // orders
-    // services
 
     //   service api for all data
     app.get("/servicesall", async (req, res) => {
@@ -50,12 +49,26 @@ async function run() {
       const service = await serviceCollection.findOne(query);
       res.send(service);
     });
-    // post api
+    // post api services
     app.post("/servicesall", async (req, res) => {
       const service = req.body;
       const result = await serviceCollection.insertOne(service);
       res.send(result);
-      console.log(req.body, result);
+    });
+
+    // post review
+    app.post("/reviews", async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.send(result);
+    });
+
+    // get review
+    app.get("/reviews", async (req, res) => {
+      const query = {};
+      const cursor = reviewCollection.find(query);
+      const review = await cursor.toArray();
+      res.send(review);
     });
   } finally {
   }
