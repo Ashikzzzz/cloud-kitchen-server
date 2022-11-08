@@ -12,6 +12,7 @@ app.use(express.json());
 // database
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.0zgm21v.mongodb.net/?retryWrites=true&w=majority`;
+
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -23,6 +24,7 @@ async function run() {
     const serviceCollection = client
       .db("cloudKitchenUser")
       .collection("services");
+    const orderCollection = client.db("cloudKitchenUser").collection("orders");
     //   services api for 3 data
     app.get("/services", async (req, res) => {
       const query = {};
@@ -30,6 +32,10 @@ async function run() {
       const services = await cursor.limit(3).toArray();
       res.send(services);
     });
+    // cloudKitchenUser
+    // orders
+    // services
+
     //   service api for all data
     app.get("/servicesall", async (req, res) => {
       const query = {};
@@ -43,6 +49,13 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const service = await serviceCollection.findOne(query);
       res.send(service);
+    });
+    // post api
+    app.post("/servicesall", async (req, res) => {
+      const service = req.body;
+      const result = await serviceCollection.insertOne(service);
+      res.send(result);
+      console.log(req.body, result);
     });
   } finally {
   }
