@@ -70,6 +70,29 @@ async function run() {
       const review = await cursor.toArray();
       res.send(review);
     });
+
+    // get data particular usr
+    app.get("/reviewsemail", async (req, res) => {
+      // console.log(req.query.email);
+      let query = {};
+      if (req.query.email) {
+        query = {
+          email: req.query.email,
+        };
+      }
+      const cursor = reviewCollection.find(query);
+      const review = await cursor.toArray();
+      console.log(review);
+      res.send(review);
+    });
+
+    // delete api
+    app.delete("/reviewsemail/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await reviewCollection.deleteOne(query);
+      res.send(result);
+    });
   } finally {
   }
 }
